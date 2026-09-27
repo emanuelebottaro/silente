@@ -1,6 +1,6 @@
 {
-  "name": "FocusWriter Web",
+  "name": "Lele Writer",
   "description": "Un'applicazione di scrittura minimalista e senza distrazioni ispirata a FocusWriter, con supporto per sfondi personalizzati, salvataggio su Google Drive ed esportazione in formati aperti.",
-  "requestFramePermissions": [],
+  "requestFramePermissions": ["microphone"],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

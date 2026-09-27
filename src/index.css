@@ -1,1 +1,42 @@
 @import "tailwindcss";
+
+/* Translucent Minimalist Scrollbars */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 9999px;
+  border: 1px solid transparent;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* Hide scrollbars for focus mode mirror elements */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Base input range overrides for polished appearance */
+input[type="range"]::-webkit-slider-thumb {
+  border: 2px solid rgba(15, 23, 42, 0.8);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Selection aesthetics */
+::selection {
+  background-color: rgba(var(--theme-rgb), 0.25);
+  color: inherit;
+}

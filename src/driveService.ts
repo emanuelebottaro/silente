@@ -6,11 +6,66 @@ export interface DriveFile {
 }
 
 /**
- * Lists text files accessible to the app (within drive.file scope)
+ * Gets or creates a Google Drive folder by its name.
+ */
+export async function getOrCreateFolder(accessToken: string, folderName: string): Promise<string> {
+  const query = encodeURIComponent(`mimeType = 'application/vnd.google-apps.folder' and name = '${folderName}' and trashed = false`);
+  const searchUrl = `https://www.googleapis.com/drive/v3/files?q=${query}&fields=files(id)`;
+
+  const res = await fetch(searchUrl, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`Google Drive API error searching folder: ${text}`);
+  }
+
+  const searchData = await res.json();
+  if (searchData.files && searchData.files.length > 0) {
+    return searchData.files[0].id;
+  }
+
+  // Folder not found, create it
+  const folderMetadata = {
+    name: folderName,
+    mimeType: 'application/vnd.google-apps.folder',
+  };
+
+  const createRes = await fetch('https://www.googleapis.com/drive/v3/files?fields=id', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+    body: JSON.stringify(folderMetadata),
+  });
+
+  if (!createRes.ok) {
+    const text = await createRes.text();
+    throw new Error(`Google Drive API error creating folder: ${text}`);
+  }
+
+  const createData = await createRes.json();
+  return createData.id;
+}
+
+/**
+ * Lists text files accessible to the app (within drive.file scope and inside the 'Lele Writer' folder)
  */
 export async function listDriveFiles(accessToken: string): Promise<DriveFile[]> {
   try {
-    const query = encodeURIComponent("mimeType = 'text/plain' or mimeType = 'text/markdown' or name contains '.txt' or name contains '.md' or name contains '.html'");
+    let folderQuery = '';
+    try {
+      const folderId = await getOrCreateFolder(accessToken, 'Lele Writer');
+      folderQuery = `'${folderId}' in parents and `;
+    } catch (err) {
+      console.warn('Could not retrieve or create Lele Writer folder for listing:', err);
+    }
+
+    const query = encodeURIComponent(`${folderQuery}(mimeType = 'text/plain' or mimeType = 'text/markdown' or name contains '.txt' or name contains '.md' or name contains '.html')`);
     const url = `https://www.googleapis.com/drive/v3/files?q=${query}&fields=files(id, name, modifiedTime, size)&orderBy=modifiedTime desc`;
 
     const res = await fetch(url, {
@@ -58,7 +113,7 @@ export async function getDriveFileContent(accessToken: string, fileId: string): 
 }
 
 /**
- * Creates a new file on Google Drive using a multipart upload (metadata + content)
+ * Creates a new file on Google Drive inside the 'Lele Writer' folder using a multipart upload
  */
 export async function createDriveFile(
   accessToken: string,
@@ -67,14 +122,25 @@ export async function createDriveFile(
   mimeType: string = 'text/plain'
 ): Promise<DriveFile> {
   try {
+    let folderId: string | null = null;
+    try {
+      folderId = await getOrCreateFolder(accessToken, 'Lele Writer');
+    } catch (err) {
+      console.warn('Could not locate or create Lele Writer folder for upload, saving in root fallback:', err);
+    }
+
     const boundary = 'focuswriter_upload_boundary';
     const delimiter = `\r\n--${boundary}\r\n`;
     const closeDelimiter = `\r\n--${boundary}--`;
 
-    const metadata = {
+    const metadata: Record<string, any> = {
       name: filename,
       mimeType: mimeType,
     };
+
+    if (folderId) {
+      metadata.parents = [folderId];
+    }
 
     const body =
       delimiter +

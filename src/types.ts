@@ -14,6 +14,9 @@ export interface DocumentSettings {
   focusMode: 'off' | 'paragraph' | 'line';
   textColor: string;
   themeColor: string; // e.g., '#38bdf8'
+  editorBgColor: string; // e.g., '#0f172a'
+  typewriterMode: boolean;
+  rememberLastFile: boolean;
 }
 
 export interface WritingDocument {

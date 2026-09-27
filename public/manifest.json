@@ -1,0 +1,16 @@
+{
+  "short_name": "Lele Writer",
+  "name": "Lele Writer",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any"
+    }
+  ],
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#090d16",
+  "background_color": "#090d16",
+  "orientation": "any"
+}

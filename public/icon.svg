@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a" />
+      <stop offset="100%" stop-color="#020617" />
+    </linearGradient>
+    <linearGradient id="accentGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8" />
+      <stop offset="100%" stop-color="#818cf8" />
+    </linearGradient>
+  </defs>
+  <!-- Background with slight border -->
+  <rect width="512" height="512" rx="128" fill="url(#bgGrad)" stroke="#1e293b" stroke-width="12" />
+  
+  <!-- Stylized central Quill or Pen with lines representing text -->
+  <g transform="translate(128, 128)">
+    <!-- Document lines background -->
+    <line x1="40" y1="60" x2="216" y2="60" stroke="#ffffff" stroke-width="14" stroke-opacity="0.1" stroke-linecap="round" />
+    <line x1="40" y1="110" x2="216" y2="110" stroke="#ffffff" stroke-width="14" stroke-opacity="0.1" stroke-linecap="round" />
+    <line x1="40" y1="160" x2="160" y2="160" stroke="#ffffff" stroke-width="14" stroke-opacity="0.1" stroke-linecap="round" />
+    
+    <!-- Quill body -->
+    <path d="M190 40 C140 100 120 160 110 210 L105 215 C102 218 98 218 95 215 L90 210 L85 180 C85 170 90 150 100 130 C110 110 130 80 190 40 Z" fill="url(#accentGrad)" />
+    <!-- Nib tip -->
+    <path d="M110 210 L95 225 L85 210 L92 203" fill="#ffffff" />
+    <!-- Center slit of quill -->
+    <path d="M150 100 L95 225" stroke="#0f172a" stroke-width="4" stroke-linecap="round" />
+  </g>
+</svg>

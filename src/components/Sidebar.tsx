@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { 
   Folder, FolderOpen, Search, Plus, Cloud, FileText, Trash2, 
-  RefreshCw, LogIn, LogOut, Check, HardDrive 
+  RefreshCw, LogIn, LogOut, Check, HardDrive, X
 } from 'lucide-react';
 import { WritingDocument } from '../types';
 import { User } from 'firebase/auth';
@@ -87,10 +87,10 @@ export default function Sidebar({
         </h3>
         <button
           onClick={onClose}
-          className="text-slate-400 hover:text-white transition-colors p-1"
+          className="text-slate-400 hover:text-white transition-all duration-200 p-1 rounded-full hover:bg-white/5 active:scale-95"
           title="Chiudi"
         >
-          &times;
+          <X className="w-4 h-4" />
         </button>
       </div>
 
@@ -174,7 +174,7 @@ export default function Sidebar({
                       e.stopPropagation();
                       onDeleteDocument(doc.id, false);
                     }}
-                    className="opacity-0 group-hover:opacity-100 text-slate-500 hover:text-red-400 transition-all p-1"
+                    className="opacity-60 md:opacity-0 group-hover:opacity-100 focus:opacity-100 text-slate-500 hover:text-red-400 transition-all p-1"
                     title="Elimina documento"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
@@ -251,7 +251,7 @@ export default function Sidebar({
                           e.stopPropagation();
                           onDeleteDocument(doc.id, true);
                         }}
-                        className="opacity-0 group-hover:opacity-100 text-slate-500 hover:text-red-400 transition-all p-1"
+                        className="opacity-60 md:opacity-0 group-hover:opacity-100 focus:opacity-100 text-slate-500 hover:text-red-400 transition-all p-1"
                         title="Elimina file da Drive"
                       >
                         <Trash2 className="w-3.5 h-3.5" />

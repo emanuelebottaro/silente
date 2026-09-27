@@ -11,8 +11,8 @@ provider.setCustomParameters({ prompt: 'select_account' });
 
 // Flag to indicate if we are in the middle of a sign-in flow.
 let isSigningIn = false;
-// Cache the access token in memory.
-let cachedAccessToken: string | null = null;
+// Cache the access token in memory and local storage.
+let cachedAccessToken: string | null = localStorage.getItem('focuswriter_drive_token');
 
 // Initialize auth state listener.
 export const initAuth = (
@@ -24,13 +24,12 @@ export const initAuth = (
       if (cachedAccessToken) {
         if (onAuthSuccess) onAuthSuccess(user, cachedAccessToken);
       } else {
-        // Since Firebase state is active but token is not in memory (e.g. on page refresh),
-        // we'll require the user to perform a sign-in click to re-acquire the Drive token,
-        // or they can work offline and sync later.
+        // Fallback check if token was cleared or not saved
         if (onAuthFailure) onAuthFailure();
       }
     } else {
       cachedAccessToken = null;
+      localStorage.removeItem('focuswriter_drive_token');
       if (onAuthFailure) onAuthFailure();
     }
   });
@@ -47,6 +46,7 @@ export const googleSignIn = async (): Promise<{ user: User; accessToken: string 
     }
 
     cachedAccessToken = credential.accessToken;
+    localStorage.setItem('focuswriter_drive_token', cachedAccessToken);
     return { user: result.user, accessToken: cachedAccessToken };
   } catch (error: any) {
     console.error('Sign-in error:', error);
@@ -63,4 +63,5 @@ export const getAccessToken = (): string | null => {
 export const logout = async () => {
   await auth.signOut();
   cachedAccessToken = null;
+  localStorage.removeItem('focuswriter_drive_token');
 };
